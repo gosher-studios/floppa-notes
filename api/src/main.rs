@@ -1,17 +1,41 @@
+mod config;
+
+use tide::{Request, Response, Error};
+use tide::security::{CorsMiddleware, Origin};
+use mongodb::{Client, Collection};
+use serde::{Deserialize, Serialize};
 use log::LevelFilter;
-use tide::{Result, Request};
+use crate::config::Config;
 
-const LISTEN: &str = "127.0.0.1:4040";
+pub type Result<T = (), E = Box<dyn std::error::Error>> = std::result::Result<T, E>;
 
-#[tokio::main]
-async fn main() -> Result<()> {
+#[derive(Serialize, Deserialize)]
+struct User {
+  username: String,
+}
+
+#[derive(Clone)]
+struct State {
+  users: Collection<User>,
+}
+
+#[async_std::main]
+async fn main() -> Result {
   env_logger::builder().filter_level(LevelFilter::Info).init();
-  let mut app = tide::new();
-  app.at("/").get(hi);
-  app.listen(LISTEN).await?;
+  let config = Config::load("api.toml");
+  let db = Client::with_uri_str(config.db)
+    .await?
+    .database("floppa-notes");
+  let mut app = tide::with_state(State {
+    users: db.collection("users"),
+  });
+  app.with(CorsMiddleware::new());
+  app.at("test").get(test);
+  app.listen(config.listen).await?;
   Ok(())
 }
 
-async fn hi(_: Request<()>) -> tide::Result {
-  Ok("hi".into())
+async fn test(req: Request<State>) -> Result<Response, Error> {
+  let count = req.state().users.count_documents(None, None).await?;
+  Ok(count.to_string().into())
 }
