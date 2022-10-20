@@ -4,7 +4,7 @@ use tide::{Request, Response, Error};
 use tide::security::CorsMiddleware;
 use mongodb::{Client, Collection};
 use serde::{Deserialize, Serialize};
-use log::LevelFilter;
+use log::{LevelFilter, info};
 use crate::config::Config;
 
 pub type Result<T = (), E = Box<dyn std::error::Error>> = std::result::Result<T, E>;
@@ -31,8 +31,19 @@ async fn main() -> Result {
   });
   app.with(CorsMiddleware::new());
   app.at("test").get(test);
+  app.at("auth/callback").get(auth_callback);
   app.listen(config.listen).await?;
   Ok(())
+}
+
+#[derive(Deserialize)]
+struct Callback {
+  code: String,
+}
+
+async fn auth_callback(req: Request<State>) -> Result<Response, Error> {
+  info!("github code {}", req.query::<Callback>()?.code);
+  Ok(":D".into())
 }
 
 async fn test(req: Request<State>) -> Result<Response, Error> {

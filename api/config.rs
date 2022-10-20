@@ -7,6 +7,8 @@ use log::{info, error};
 pub struct Config {
   pub listen: SocketAddr,
   pub db: String,
+  pub github_id: String,
+  pub github_secret: String,
 }
 
 impl Config {

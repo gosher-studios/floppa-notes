@@ -1,5 +1,17 @@
 module.exports = {
 	content: ["./web/**/*.tsx"],
-	theme: {},
+	theme: {
+		colors: {
+      bg: "#111",
+			white: "#fff",
+			purple: "#9a9cea",
+			blue: "#a2b9ee",
+			cyan: "#a2dcee",
+			green: "#adeee2"
+		},
+		fontFamily: {
+			switzer: ["Switzer","sans-serif"]
+		}
+	},
 	plugins: []
 }
