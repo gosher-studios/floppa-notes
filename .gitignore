@@ -1,3 +1,5 @@
+node_modules/
+dist/
 target/
-web/dist/
+.parcel-cache/
 api.toml
