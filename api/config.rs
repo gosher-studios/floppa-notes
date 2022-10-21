@@ -3,7 +3,7 @@ use std::net::SocketAddr;
 use serde::Deserialize;
 use log::{info, error};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct Config {
   pub listen: SocketAddr,
   pub db: String,
