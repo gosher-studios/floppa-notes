@@ -12,7 +12,7 @@ const Button = ({
 }) => {
   return (
     <button
-      className="px-2 py-1 border-2 transition-colors hover:border-purple rounded-md flex items-center font-bold"
+      className="px-2 py-1 transition-colors border-2 hover:border-purple rounded-md font-bold flex items-center"
       onClick={onClick}
     >
       <Icon className="mr-1" />

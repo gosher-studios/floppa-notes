@@ -7,7 +7,8 @@ module.exports = {
 			purple: "#9a9cea",
 			blue: "#a2b9ee",
 			cyan: "#a2dcee",
-			green: "#adeee2"
+			green: "#adeee2",
+			transparent: "transparent"
 		},
 		fontFamily: {
 			switzer: ["Switzer","sans-serif"]

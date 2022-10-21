@@ -9,13 +9,18 @@ import {
 } from "react-router-dom";
 
 import { UserContext } from "./context";
-import { Home } from "./pages";
+import { Home, Account } from "./pages";
+import { Header } from "./components";
 
 const LoginCallback = () => {
   const [params] = useSearchParams();
   localStorage.setItem("token", params.get("token"));
   location.replace("/");
+  return <></>;
 };
+
+const authenticated = (user, element: React.ReactNode) =>
+  user.username ? element : <Navigate to="/" />;
 
 const App = () => {
   const [user, setUser] = useState({ loading: true });
@@ -28,7 +33,12 @@ const App = () => {
       })
         .then((res) => res.json())
         .then((user) =>
-          setUser({ loading: false, username: user.login, id: user.id })
+          setUser({
+            loading: false,
+            username: user.login,
+            id: user.id,
+            avatar: user.avatar_url,
+          })
         );
     } else {
       setUser({ loading: false, username: null });
@@ -39,17 +49,18 @@ const App = () => {
     <BrowserRouter>
       <UserContext.Provider value={user}>
         <div className="w-screen h-screen flex justify-center bg-bg text-white text-lg font-switzer">
-          <div className="p-4 w-full lg:w-[1024px]">
-            <header className="text-4xl mb-8">
-              <h1 className="font-bold">Floppa Notes</h1>
-              <div className="absolute left-0 mt-4 w-screen h-[2px] bg-gradient-to-r from-purple via-blue via-cyan to-green" />
-            </header>
+          <div className="p-5 w-full lg:w-[1024px]">
+            <Header />
             {user.loading ? (
               <p>loading</p>
             ) : (
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/callback" element={<LoginCallback />} />
+                <Route
+                  path="/account"
+                  element={authenticated(user, <Account />)}
+                />
               </Routes>
             )}
           </div>
