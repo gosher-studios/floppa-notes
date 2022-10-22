@@ -8,7 +8,7 @@ const Account = () => {
   const user = useContext(UserContext);
 
   return (
-    <Layout>
+    <Layout authenticated>
       <div className="space-y-2">
         <h2 className="font-bold text-3xl">Account:</h2>
         <div className="flex items-center space-x-4">

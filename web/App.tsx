@@ -4,13 +4,11 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  Navigate,
   useSearchParams,
 } from "react-router-dom";
 
 import { UserContext } from "./context";
 import { Home, Account, Editor } from "./pages";
-import { Layout } from "./components";
 
 const LoginCallback = () => {
   const [params] = useSearchParams();
@@ -18,9 +16,6 @@ const LoginCallback = () => {
   location.replace("/");
   return <></>;
 };
-
-const authenticated = (user, element: React.ReactNode) =>
-  user.token ? element : <Navigate to="/" />;
 
 const App = () => {
   const [user, setUser] = useState({ loading: true });
@@ -51,19 +46,12 @@ const App = () => {
     <BrowserRouter>
       <UserContext.Provider value={user}>
         <div className="w-screen min-h-screen flex justify-center bg-bg text-white text-lg font-switzer">
-          {user.loading ? (
-            <Layout>loading</Layout>
-          ) : (
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/callback" element={<LoginCallback />} />
-              <Route path="/editor" element={authenticated(user, <Editor />)} />
-              <Route
-                path="/account"
-                element={authenticated(user, <Account />)}
-              />
-            </Routes>
-          )}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/callback" element={<LoginCallback />} />
+            <Route path="/editor" element={<Editor />} />
+            <Route path="/account" element={<Account />} />
+          </Routes>
         </div>
       </UserContext.Provider>
     </BrowserRouter>

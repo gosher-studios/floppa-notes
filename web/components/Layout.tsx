@@ -1,12 +1,18 @@
 import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { GitHub } from "react-feather";
 
 import { UserContext } from "../context";
 import { Button } from "../components";
 import { GITHUB_ID } from "../config";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({
+  authenticated,
+  children,
+}: {
+  authenticated?: boolean;
+  children: React.ReactNode;
+}) => {
   const user = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -42,7 +48,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           ))}
         <div className="absolute left-0 top-20 w-screen h-[2px] bg-gradient-to-r from-purple via-blue via-cyan to-green" />
       </header>
-      {children}
+      {authenticated && user.loading ? (
+        <p>loading</p>
+      ) : !authenticated || user.token ? (
+        children
+      ) : (
+        <Navigate to="/" />
+      )}
     </div>
   );
 };
