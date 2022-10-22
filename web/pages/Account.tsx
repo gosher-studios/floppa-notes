@@ -1,34 +1,35 @@
 import React, { useContext } from "react";
-import { GitHub, LogOut } from "react-feather";
+import { LogOut } from "react-feather";
 
-import { Button } from "../components";
 import { UserContext } from "../context";
+import { Layout, Button } from "../components";
 
 const Account = () => {
   const user = useContext(UserContext);
 
   return (
-    <div className="space-y-2">
-      <h2 className="font-bold text-3xl">Account:</h2>
-      <div className="flex items-center space-x-4">
-        <p className="text-xl">
-          <span className="font-bold">{user.username}</span>
-          <br />
-          Linked with GitHub.
-        </p>
-        <img className="w-16 rounded-full" src={user.avatar} />
-        <GitHub className="w-16 h-auto" />
+    <Layout>
+      <div className="space-y-2">
+        <h2 className="font-bold text-3xl">Account:</h2>
+        <div className="flex items-center space-x-4">
+          <img className="w-16 rounded-md" src={user.avatar} />
+          <p className="text-xl">
+            <span className="font-bold">{user.username}</span>
+            <br />
+            Linked with GitHub.
+          </p>
+        </div>
+        <Button
+          Icon={LogOut}
+          onClick={() => {
+            localStorage.removeItem("token");
+            location.reload();
+          }}
+        >
+          Sign out
+        </Button>
       </div>
-      <Button
-        Icon={LogOut}
-        onClick={() => {
-          localStorage.removeItem("token");
-          location.reload();
-        }}
-      >
-        Sign out
-      </Button>
-    </div>
+    </Layout>
   );
 };
 

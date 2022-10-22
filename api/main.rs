@@ -1,26 +1,21 @@
 mod auth;
 mod config;
+mod notes;
 
-use tide::{Request, Response, Error};
 use tide::security::CorsMiddleware;
 use mongodb::{Client as MongoClient, Collection};
-use serde::{Deserialize, Serialize};
 use reqwest::Client;
 use log::{LevelFilter, info};
 use crate::config::Config;
+use crate::notes::Note;
 
 pub type Result<T = (), E = Box<dyn std::error::Error>> = std::result::Result<T, E>;
-
-#[derive(Serialize, Deserialize)]
-struct User {
-  username: String,
-}
 
 #[derive(Clone)]
 pub struct State {
   reqwest: Client,
   config: Config,
-  users: Collection<User>,
+  notes: Collection<Note>,
 }
 
 impl State {
@@ -32,7 +27,7 @@ impl State {
     Ok(Self {
       reqwest: Client::builder().user_agent("floppa notes").build()?,
       config,
-      users: db.collection("users"),
+      notes: db.collection("notes"),
     })
   }
 }
@@ -43,13 +38,8 @@ async fn main() -> Result {
   let config = Config::load("api.toml");
   let mut app = tide::with_state(State::new(config.clone()).await?);
   app.with(CorsMiddleware::new());
-  app.at("test").get(test);
+  app.at("notes/:id").get(notes::get);
   app.at("auth/callback").get(auth::callback);
   app.listen(config.listen).await?;
   Ok(())
-}
-
-async fn test(req: Request<State>) -> Result<Response, Error> {
-  let count = req.state().users.count_documents(None, None).await?;
-  Ok(count.to_string().into())
 }

@@ -1,4 +1,4 @@
-use tide::{Request, Response, Error, Redirect};
+use tide::{Request, Response, Error, Redirect, StatusCode};
 use serde::Deserialize;
 use crate::{Result, State};
 
@@ -10,6 +10,11 @@ struct GithubCallback {
 #[derive(Deserialize)]
 struct GithubLogin {
   access_token: String,
+}
+
+#[derive(Deserialize)]
+pub struct GithubUser {
+  pub id: i64,
 }
 
 pub async fn callback(req: Request<State>) -> Result<Response, Error> {
@@ -33,5 +38,23 @@ pub async fn callback(req: Request<State>) -> Result<Response, Error> {
       res.access_token
     ))
     .into(),
+  )
+}
+
+pub async fn get_user(req: &Request<State>) -> Result<GithubUser, Error> {
+  let token = match req.header("Authorization") {
+    Some(a) => a.as_str(),
+    None => return Err(Error::from_str(StatusCode::Unauthorized, "no token")),
+  };
+  Ok(
+    req
+      .state()
+      .reqwest
+      .get("https://api.github.com/user")
+      .header("Authorization", token)
+      .send()
+      .await?
+      .json()
+      .await?,
   )
 }

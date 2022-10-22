@@ -3,7 +3,9 @@ module.exports = {
 	theme: {
 		colors: {
       bg: "#111",
+			editor: "#222",
 			white: "#fff",
+			accent: "#ccc",
 			purple: "#9a9cea",
 			blue: "#a2b9ee",
 			cyan: "#a2dcee",

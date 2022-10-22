@@ -1,10 +1,9 @@
 import React from "react";
 
+import { Layout } from "../components";
+
 const Home = () => {
-  return <ul>
-          <li>TODO</li>
-          <li>fart</li>
-        </ul>
+  return <Layout>todo</Layout>;
 };
 
 export default Home;
