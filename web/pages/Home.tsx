@@ -1,7 +1,10 @@
 import React from "react";
 
 const Home = () => {
-  return <h1>todo</h1>;
+  return <ul>
+          <li>TODO</li>
+          <li>fart</li>
+        </ul>
 };
 
 export default Home;

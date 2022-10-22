@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 
 import { UserContext } from "./context";
-import { Home, Account } from "./pages";
+import { Home, Account,Notes } from "./pages";
 import { Header } from "./components";
 
 const LoginCallback = () => {
@@ -48,7 +48,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <UserContext.Provider value={user}>
-        <div className="w-screen h-screen flex justify-center bg-bg text-white text-lg font-switzer">
+        <div className="w-screen min-h-screen  flex justify-center bg-bg text-white text-lg font-switzer">
           <div className="p-5 w-full lg:w-[1024px]">
             <Header />
             {user.loading ? (
@@ -57,6 +57,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/callback" element={<LoginCallback />} />
+                <Route path="/note" element={<Notes />}/>
                 <Route
                   path="/account"
                   element={authenticated(user, <Account />)}

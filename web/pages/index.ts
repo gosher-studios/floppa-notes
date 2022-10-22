@@ -1,4 +1,4 @@
 import Home from "./Home";
 import Account from "./Account";
-
-export { Home, Account };
+import Notes from "./Notes";
+export { Home, Account ,Notes};

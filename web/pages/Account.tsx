@@ -26,7 +26,7 @@ const Account = () => {
           location.reload();
         }}
       >
-        Signout
+        Sign out
       </Button>
     </div>
   );
