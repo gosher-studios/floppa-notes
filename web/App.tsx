@@ -4,11 +4,12 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Navigate,
   useSearchParams,
 } from "react-router-dom";
 
 import { UserContext } from "./context";
-import { Home, Account, Editor } from "./pages";
+import { Home, Settings, Editor } from "./pages";
 
 const LoginCallback = () => {
   const [params] = useSearchParams();
@@ -45,12 +46,13 @@ const App = () => {
   return (
     <BrowserRouter>
       <UserContext.Provider value={user}>
-        <div className="w-screen min-h-screen flex justify-center bg-bg text-white text-lg font-switzer">
+        <div className="w-screen min-h-screen flex justify-center bg-darkgrey text-white text-lg font-switzer">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/callback" element={<LoginCallback />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/editor" element={<Editor />} />
-            <Route path="/account" element={<Account />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
       </UserContext.Provider>

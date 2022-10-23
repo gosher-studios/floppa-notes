@@ -29,9 +29,9 @@ const Layout = ({
         {!user.loading &&
           (user.token ? (
             <img
-              className="w-10 rounded-md cursor-pointer"
+              className="w-10 rounded-md cursor-pointer transition-transform outline-purple hover:outline hover:scale-105"
               src={user.avatar}
-              onClick={() => navigate("/account")}
+              onClick={() => navigate("/settings")}
             />
           ) : (
             <Button

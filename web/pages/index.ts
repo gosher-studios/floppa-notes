@@ -1,5 +1,5 @@
 import Home from "./Home";
-import Account from "./Account";
+import Settings from "./Settings";
 import Editor from "./Editor";
 
-export { Home, Account, Editor };
+export { Home, Settings, Editor };

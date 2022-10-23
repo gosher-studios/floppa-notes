@@ -5,7 +5,7 @@ mod notes;
 use tide::security::CorsMiddleware;
 use mongodb::{Client as MongoClient, Collection};
 use reqwest::Client;
-use log::{LevelFilter, info};
+use log::info;
 use crate::config::Config;
 use crate::notes::Note;
 
@@ -34,11 +34,11 @@ impl State {
 
 #[async_std::main]
 async fn main() -> Result {
-  env_logger::builder().filter_level(LevelFilter::Info).init();
+  tide::log::start();
   let config = Config::load("api.toml");
   let mut app = tide::with_state(State::new(config.clone()).await?);
   app.with(CorsMiddleware::new());
-  app.at("notes/:id").get(notes::get);
+  app.at("notes/:id").get(notes::get).post(notes::update);
   app.at("auth/callback").get(auth::callback);
   app.listen(config.listen).await?;
   Ok(())

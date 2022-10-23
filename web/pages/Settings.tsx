@@ -4,7 +4,7 @@ import { LogOut } from "react-feather";
 import { UserContext } from "../context";
 import { Layout, Button } from "../components";
 
-const Account = () => {
+const Settings = () => {
   const user = useContext(UserContext);
 
   return (
@@ -28,9 +28,13 @@ const Account = () => {
         >
           Sign out
         </Button>
+        <h2 className="font-bold text-3xl">Theme:</h2>
+        <div className="w-fit p-1 bg-gradient-to-r from-purple via-blue via-cyan to-green text-darkgrey font-bold underline rounded cursor-pointer transition-transform hover:scale-105">
+          Periwinkle Dark
+        </div>
       </div>
     </Layout>
   );
 };
 
-export default Account;
+export default Settings;

@@ -2,10 +2,10 @@ module.exports = {
 	content: ["./web/**/*.tsx"],
 	theme: {
 		colors: {
-      bg: "#111",
-			editor: "#222",
+      darkgrey: "#111",
+			grey: "#222",
+			lightgrey: "#ccc",
 			white: "#fff",
-			accent: "#ccc",
 			purple: "#9a9cea",
 			blue: "#a2b9ee",
 			cyan: "#a2dcee",
