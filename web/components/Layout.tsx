@@ -20,7 +20,7 @@ const Layout = ({
     <div className="p-5 w-full lg:w-[1024px]">
       <header className="mb-10 flex items-center">
         <h1
-          className="font-bold text-4xl cursor-pointer transition-colors hover:text-purple"
+          className="font-bold text-4xl cursor-pointer transition-colors hover:text-purple duration-200"
           onClick={() => navigate("/")}
         >
           Floppa Notes
@@ -29,7 +29,7 @@ const Layout = ({
         {!user.loading &&
           (user.token ? (
             <img
-              className="w-10 rounded-md cursor-pointer transition-transform outline-purple hover:outline hover:scale-105"
+              className="w-10 rounded-md cursor-pointer transition-all outline-purple duration-150 hover:outline outline-2 hover:scale-105"
               src={user.avatar}
               onClick={() => navigate("/settings")}
             />

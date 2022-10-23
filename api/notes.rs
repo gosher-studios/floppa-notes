@@ -1,6 +1,7 @@
 use tide::{Request, Response, Error, Body, StatusCode};
 use mongodb::bson;
 use serde::{Serialize, Deserialize};
+use nanoid::nanoid;
 use crate::{Result, State, auth};
 
 #[derive(Serialize, Deserialize)]
@@ -68,6 +69,23 @@ pub async fn update(mut req: Request<State>) -> Result<Response, Error> {
         StatusCode::Unauthorized.into()
       }
     }
-    None => StatusCode::NotImplemented.into(), // todo create note
+    None => StatusCode::NotFound.into(),
   })
+}
+
+pub async fn create(req: Request<State>) -> Result<Response, Error> {
+  req
+    .state()
+    .notes
+    .insert_one(
+      Note {
+        _id: nanoid!(),
+        owner: auth::get_user(&req).await?.id,
+        title: "shit".to_string(),
+        content: String::new(),
+      },
+      None,
+    )
+    .await?;
+  Ok("balls".into())
 }
