@@ -26,7 +26,7 @@ const Settings = () => {
             location.reload();
           }}
         >
-          Sign out
+          Logout
         </Button>
         <h2 className="font-bold text-3xl">Theme:</h2>
         <div className="w-fit p-1 bg-gradient-to-r from-purple via-blue via-cyan to-green text-darkgrey font-bold underline rounded cursor-pointer transition-transform hover:scale-105 select-none">

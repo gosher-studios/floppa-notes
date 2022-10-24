@@ -35,17 +35,22 @@ struct NoteUpdate {
   content: Option<String>,
 }
 
-pub async fn get_id(req: Request<State>) -> Result<Response, Error> {
-  Ok(match Note::get(&req).await? {
-    Some(note) => {
-      if note.editable(&req).await? {
-        Body::from_json(&note)?.into()
-      } else {
-        StatusCode::Unauthorized.into()
-      }
-    }
-    None => StatusCode::NotFound.into(),
-  })
+pub async fn create(req: Request<State>) -> Result<Response, Error> {
+  let id = nanoid!();
+  req
+    .state()
+    .notes
+    .insert_one(
+      Note {
+        _id: id.clone(),
+        owner: auth::get_user(&req).await?.id,
+        title: "New Note".to_string(),
+        content: String::new(),
+      },
+      None,
+    )
+    .await?;
+  Ok(id.into())
 }
 
 pub async fn get_all(req: Request<State>) -> Result<Response, Error> {
@@ -59,6 +64,19 @@ pub async fn get_all(req: Request<State>) -> Result<Response, Error> {
     .await;
 
   Ok(Body::from_json(&notes)?.into())
+}
+
+pub async fn get_id(req: Request<State>) -> Result<Response, Error> {
+  Ok(match Note::get(&req).await? {
+    Some(note) => {
+      if note.editable(&req).await? {
+        Body::from_json(&note)?.into()
+      } else {
+        StatusCode::Unauthorized.into()
+      }
+    }
+    None => StatusCode::NotFound.into(),
+  })
 }
 
 pub async fn update(mut req: Request<State>) -> Result<Response, Error> {
@@ -87,19 +105,20 @@ pub async fn update(mut req: Request<State>) -> Result<Response, Error> {
   })
 }
 
-pub async fn create(req: Request<State>) -> Result<Response, Error> {
-  req
-    .state()
-    .notes
-    .insert_one(
-      Note {
-        _id: nanoid!(),
-        owner: auth::get_user(&req).await?.id,
-        title: "shit".to_string(),
-        content: String::new(),
-      },
-      None,
-    )
-    .await?;
-  Ok("balls".into())
+pub async fn delete(req: Request<State>) -> Result<Response, Error> {
+  Ok(match Note::get(&req).await? {
+    Some(note) => {
+      if note.editable(&req).await? {
+        req
+          .state()
+          .notes
+          .delete_one(bson::doc! {"_id": req.param("id")?}, None)
+          .await?;
+        StatusCode::Ok.into()
+      } else {
+        StatusCode::Unauthorized.into()
+      }
+    }
+    None => StatusCode::NotFound.into(),
+  })
 }

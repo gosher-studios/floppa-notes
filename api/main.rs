@@ -3,6 +3,7 @@ mod config;
 mod notes;
 
 use tide::security::CorsMiddleware;
+use tide::http::headers::HeaderValue;
 use mongodb::{Client as MongoClient, Collection};
 use reqwest::Client;
 use log::info;
@@ -37,9 +38,13 @@ async fn main() -> Result {
   tide::log::start();
   let config = Config::load("api.toml");
   let mut app = tide::with_state(State::new(config.clone()).await?);
-  app.with(CorsMiddleware::new());
-  app.at("notes/:id").get(notes::get_id).post(notes::update);
+  app.with(CorsMiddleware::new().allow_methods("GET, POST, DELETE".parse::<HeaderValue>()?));
   app.at("notes").get(notes::get_all).post(notes::create);
+  app
+    .at("notes/:id")
+    .get(notes::get_id)
+    .post(notes::update)
+    .delete(notes::delete);
   app.at("auth/callback").get(auth::callback);
   app.listen(config.listen).await?;
   Ok(())

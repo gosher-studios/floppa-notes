@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { UserContext } from "../context";
 
-// const NOTE = "63540d06286474eb3e2558a0";
-const NOTE = "OYZbB9jiCHQenw7R_II32";
-
 const Editor = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const user = useContext(UserContext);
   const [note, setNote] = useState({ loading: true });
@@ -14,7 +12,7 @@ const Editor = () => {
   useEffect(() => {
     if (!user.loading) {
       if (user.token) {
-        fetch("http://localhost:4040/notes/" + NOTE, {
+        fetch("http://localhost:4040/notes/" + id, {
           headers: { Authorization: "Bearer " + user.token },
         })
           .then((res) => res.json())
@@ -24,24 +22,24 @@ const Editor = () => {
               title: note.title,
               content: note.content,
             })
-          );
+          )
+          .catch(() => navigate("/"));
       } else {
         navigate("/");
       }
     }
   }, [user]);
-  console.log(note);
 
   useEffect(() => {
     //probably should time this
     if (!note.loading) {
+      setStatus("saving...");
+      fetch("http://localhost:4040/notes/" + id, {
+        headers: { Authorization: "Bearer " + user.token },
+        method: "POST",
+        body: JSON.stringify({ content: note.content }),
+      }).then(() => setStatus("saved"));
     }
-    setStatus("saving...");
-    fetch("http://localhost:4040/notes/" + NOTE, {
-      headers: { Authorization: "Bearer " + user.token },
-      method: "POST",
-      body: JSON.stringify({ content: note.content }),
-    }).then(() => setStatus("saved"));
   }, [note]);
 
   return note.loading ? (
@@ -61,7 +59,7 @@ const Editor = () => {
       <textarea
         value={note.content}
         onChange={(e) => setNote({ ...note, ...{ content: e.target.value } })}
-        className="resize-none outline-none bg-grey h-48 p-4 text-base rounded flex-1"
+        className="resize-none outline-none bg-grey h-48 p-4 text-base flex-1"
       />
     </div>
   );

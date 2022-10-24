@@ -51,7 +51,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/callback" element={<LoginCallback />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/editor" element={<Editor />} />
+            <Route path="/editor/:id" element={<Editor />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
