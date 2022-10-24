@@ -38,8 +38,8 @@ async fn main() -> Result {
   let config = Config::load("api.toml");
   let mut app = tide::with_state(State::new(config.clone()).await?);
   app.with(CorsMiddleware::new());
-  app.at("notes/:id").get(notes::get).post(notes::update);
-  app.at("notes").post(notes::create);
+  app.at("notes/:id").get(notes::get_id).post(notes::update);
+  app.at("notes").get(notes::get_all).post(notes::create);
   app.at("auth/callback").get(auth::callback);
   app.listen(config.listen).await?;
   Ok(())

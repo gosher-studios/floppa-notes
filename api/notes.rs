@@ -2,6 +2,7 @@ use tide::{Request, Response, Error, Body, StatusCode};
 use mongodb::bson;
 use serde::{Serialize, Deserialize};
 use nanoid::nanoid;
+use async_std::stream::StreamExt;
 use crate::{Result, State, auth};
 
 #[derive(Serialize, Deserialize)]
@@ -34,7 +35,7 @@ struct NoteUpdate {
   content: Option<String>,
 }
 
-pub async fn get(req: Request<State>) -> Result<Response, Error> {
+pub async fn get_id(req: Request<State>) -> Result<Response, Error> {
   Ok(match Note::get(&req).await? {
     Some(note) => {
       if note.editable(&req).await? {
@@ -45,6 +46,19 @@ pub async fn get(req: Request<State>) -> Result<Response, Error> {
     }
     None => StatusCode::NotFound.into(),
   })
+}
+
+pub async fn get_all(req: Request<State>) -> Result<Response, Error> {
+  let notes: Vec<_> = req
+    .state()
+    .notes
+    .find(bson::doc! {"owner": auth::get_user(&req).await?.id}, None)
+    .await?
+    .map(|x| x.unwrap())
+    .collect()
+    .await;
+
+  Ok(Body::from_json(&notes)?.into())
 }
 
 pub async fn update(mut req: Request<State>) -> Result<Response, Error> {
