@@ -8,7 +8,6 @@ const Editor = () => {
   const user = useContext(UserContext);
   const [note, setNote] = useState({ loading: true });
   const [status, setStatus] = useState("opened");
-
   useEffect(() => {
     if (!user.loading) {
       if (user.token) {
@@ -37,7 +36,7 @@ const Editor = () => {
       fetch("http://localhost:4040/notes/" + id, {
         headers: { Authorization: "Bearer " + user.token },
         method: "POST",
-        body: JSON.stringify({ content: note.content }),
+        body: JSON.stringify({ content: note.content, title: note.title }),
       }).then(() => setStatus("saved"));
     }
   }, [note]);
@@ -53,7 +52,7 @@ const Editor = () => {
         >
           Floppa Notes
         </h1>
-        <p>{note.title}</p>
+        <p contentEditable="true" className="px-1" onBlur={(e) => { setNote({...note ,  ...{title: e.target.innerHTML} })}} >{note.title}</p>
         <p className="text-lightgrey ml-2 text-sm">{status}</p>
       </div>
       <textarea
