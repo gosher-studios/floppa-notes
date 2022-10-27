@@ -58,7 +58,7 @@ const Editor = () => {
       <textarea
         value={note.content}
         onChange={(e) => setNote({ ...note, ...{ content: e.target.value } })}
-        className="resize-none outline-none bg-grey h-48 p-4 text-base flex-1"
+        className="resize-none outline-none bg-grey  p-4 text-base flex-1"
       />
     </div>
   );
