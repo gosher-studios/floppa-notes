@@ -9,6 +9,7 @@ const Home = () => {
   const user = useContext(UserContext);
   const [notes, setNotes] = useState([]);
   const navigate = useNavigate();
+  const [search, setSearch] = useState("")
   useEffect(() => {
     if (!user.loading) {
       if (user.token) {
@@ -51,6 +52,16 @@ const Home = () => {
     <Layout>
       {user.token ? (
         <>
+          <title>NeoNotes</title>
+          <div className="w-full transition-colors hover:bg-grey  cursor-pointer flex items-center border-grey border-b-2 mb-8">
+            <input
+              type="text"
+              className="bg-transparent border-b-2 border-lightgrey w-full outline-none px-2"
+              placeholder="Search Your Notes..."
+              onChange={(e) => {}}
+            />
+          </div>
+
           <h2 className="text-2xl font-bold">Your Notes:</h2>
           <div className="outline outline-2 outline-grey my-2">
             {notes.map((note) => (
@@ -71,7 +82,7 @@ const Home = () => {
                 >
                   {note.title}
                 </span>
-                <span className="flex-1"/>
+                <span className="flex-1" />
                 <Trash
                   className="transition-all hover:text-purple hover:scale-125"
                   onClick={(e) => deleteNote(e, note._id)}

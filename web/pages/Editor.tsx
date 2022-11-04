@@ -45,6 +45,7 @@ const Editor = () => {
     <p>loading</p>
   ) : (
     <div className="w-[1024px] flex flex-col">
+      <title>{note.title}</title>
       <div className="flex justify-center items-center relative py-2">
         <h1
           className="absolute left-2 text-2xl font-bold cursor-pointer"
@@ -52,7 +53,15 @@ const Editor = () => {
         >
           Floppa Notes
         </h1>
-        <p contentEditable="true" className="px-1" onBlur={(e) => { setNote({...note ,  ...{title: e.target.innerHTML} })}} >{note.title}</p>
+        <p
+          contentEditable="true"
+          className="px-1"
+          onBlur={(e) => {
+            setNote({ ...note, ...{ title: e.target.innerHTML } });
+          }}
+        >
+          {note.title}
+        </p>
         <p className="text-lightgrey ml-2 text-sm">{status}</p>
       </div>
       <textarea
