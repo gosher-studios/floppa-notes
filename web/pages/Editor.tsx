@@ -51,7 +51,7 @@ const Editor = () => {
           className="absolute left-2 text-2xl font-bold cursor-pointer"
           onClick={() => navigate("/")}
         >
-          Floppa Notes
+          NeoNotes
         </h1>
         <p
           contentEditable="true"

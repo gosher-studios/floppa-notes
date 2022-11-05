@@ -9,7 +9,7 @@ const Home = () => {
   const user = useContext(UserContext);
   const [notes, setNotes] = useState([]);
   const navigate = useNavigate();
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState(["", false]);
   useEffect(() => {
     if (!user.loading) {
       if (user.token) {
@@ -58,37 +58,47 @@ const Home = () => {
               type="text"
               className="bg-transparent border-b-2 border-lightgrey w-full outline-none px-2"
               placeholder="Search Your Notes..."
-              onChange={(e) => {}}
+              onChange={(e) => {
+                if (e.target.value === "") {
+                  setSearch(e.target.value, true);
+                } else {
+                  setSearch("", false);
+                }
+              }}
             />
           </div>
 
           <h2 className="text-2xl font-bold">Your Notes:</h2>
           <div className="outline outline-2 outline-grey my-2">
-            {notes.map((note) => (
-              <div
-                key={note._id}
-                className="w-full transition-colors hover:bg-grey p-2 cursor-pointer flex items-center border-grey border-b-2"
-                onClick={() => navigate("/editor/" + note._id)}
-              >
-                <span
-                  className="font-bold hover:outline outline-darkgrey px-2 rounded-sm  "
-                  contentEditable="true"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                  onBlur={(e) => {
-                    renameNote(note._id, e.target.value);
-                  }}
-                >
-                  {note.title}
-                </span>
-                <span className="flex-1" />
-                <Trash
-                  className="transition-all hover:text-purple hover:scale-125"
-                  onClick={(e) => deleteNote(e, note._id)}
-                />
-              </div>
-            ))}
+            {search
+              ? notes.map((note) => (
+                  <div
+                    key={note._id}
+                    className="w-full transition-colors hover:bg-grey p-2 cursor-pointer flex items-center border-grey border-b-2"
+                    onClick={() => navigate("/editor/" + note._id)}
+                  >
+                    <span
+                      className="font-bold hover:outline outline-darkgrey px-2 rounded-sm  "
+                      contentEditable="true"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onBlur={(e) => {
+                        renameNote(note._id, e.target.value);
+                      }}
+                    >
+                      {note.title}
+                    </span>
+                    <span className="flex-1" />
+                    <Trash
+                      className="transition-all hover:text-purple hover:scale-125"
+                      onClick={(e) => deleteNote(e, note._id)}
+                    />
+                  </div>
+                ))
+              : notes
+                  .filter((note) => note.title.includes(search))
+                  .map((fnote) => <div onClick={() => console.log(fnote.title)}>{fnote.title}</div>)}
             <button
               className="w-full transition-colors hover:bg-grey px-4 py-2 flex items-center font-bold"
               onClick={() => createNote()}

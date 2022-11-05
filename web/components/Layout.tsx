@@ -23,7 +23,7 @@ const Layout = ({
           className="font-bold text-4xl cursor-pointer transition-colors hover:text-purple duration-200"
           onClick={() => navigate("/")}
         >
-          Floppa Notes
+          NeoNotes
         </h1>
         <span className="flex-1" />
         {!user.loading &&
