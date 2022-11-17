@@ -1,5 +1,6 @@
 use tide::{Request, Response, Error, Body, StatusCode};
 use mongodb::bson;
+use mongodb::options::UpdateOptions;
 use serde::{Serialize, Deserialize};
 use nanoid::nanoid;
 use async_std::stream::StreamExt;
@@ -37,6 +38,7 @@ struct NoteUpdate {
 
 pub async fn create(req: Request<State>) -> Result<Response, Error> {
   let id = nanoid!();
+  let uid = auth::get_user(&req).await?.id;
   req
     .state()
     .notes
@@ -50,10 +52,20 @@ pub async fn create(req: Request<State>) -> Result<Response, Error> {
       None,
     )
     .await?;
+  req
+    .state()
+    .users
+    .update_one(
+      bson::doc! {"owner":uid},
+      bson::doc! {"$push": {"notes":id.clone()}},
+      Some(UpdateOptions::builder().upsert(true).build()),
+    )
+    .await?;
   Ok(id.into())
 }
 
 pub async fn get_all(req: Request<State>) -> Result<Response, Error> {
+  // use user.notes instead
   let notes: Vec<_> = req
     .state()
     .notes

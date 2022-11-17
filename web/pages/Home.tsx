@@ -9,7 +9,7 @@ const Home = () => {
   const user = useContext(UserContext);
   const [notes, setNotes] = useState([]);
   const navigate = useNavigate();
-  const [search, setSearch] = useState(["", false]);
+  const [search, setSearch] = useState("");
   useEffect(() => {
     if (!user.loading) {
       if (user.token) {
@@ -48,22 +48,44 @@ const Home = () => {
     setNotes(notes.filter((n) => n._id !== id));
   };
 
+  const Note = ({ note }) => {
+    return (
+      <div
+        className="w-full transition-colors hover:bg-grey p-2 cursor-pointer flex items-center border-grey border-b-2"
+        onClick={() => navigate("/editor/" + note._id)}
+      >
+        <span
+          className="font-bold hover:outline outline-darkgrey px-2 rounded-sm  "
+          contentEditable="true"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          onBlur={(e) => {
+            renameNote(note._id, e.target.value);
+          }}
+        >
+          {note.title}
+        </span>
+        <span className="flex-1" />
+        <Trash
+          className="transition-all hover:text-purple hover:scale-125"
+          onClick={(e) => deleteNote(e, note._id)}
+        />
+      </div>
+    );
+  };
+
   return (
     <Layout>
       {user.token ? (
         <>
-          <title>NeoNotes</title>
           <div className="w-full transition-colors hover:bg-grey  cursor-pointer flex items-center border-grey border-b-2 mb-8">
             <input
               type="text"
               className="bg-transparent border-b-2 border-lightgrey w-full outline-none px-2"
               placeholder="Search Your Notes..."
               onChange={(e) => {
-                if (e.target.value === "") {
-                  setSearch(e.target.value, true);
-                } else {
-                  setSearch("", false);
-                }
+                setSearch(e.target.value);
               }}
             />
           </div>
@@ -71,34 +93,13 @@ const Home = () => {
           <h2 className="text-2xl font-bold">Your Notes:</h2>
           <div className="outline outline-2 outline-grey my-2">
             {search
-              ? notes.map((note) => (
-                  <div
-                    key={note._id}
-                    className="w-full transition-colors hover:bg-grey p-2 cursor-pointer flex items-center border-grey border-b-2"
-                    onClick={() => navigate("/editor/" + note._id)}
-                  >
-                    <span
-                      className="font-bold hover:outline outline-darkgrey px-2 rounded-sm  "
-                      contentEditable="true"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onBlur={(e) => {
-                        renameNote(note._id, e.target.value);
-                      }}
-                    >
-                      {note.title}
-                    </span>
-                    <span className="flex-1" />
-                    <Trash
-                      className="transition-all hover:text-purple hover:scale-125"
-                      onClick={(e) => deleteNote(e, note._id)}
-                    />
-                  </div>
-                ))
-              : notes
+              ? notes
                   .filter((note) => note.title.includes(search))
-                  .map((fnote) => <div onClick={() => console.log(fnote.title)}>{fnote.title}</div>)}
+                  .map((note) => (
+                      <Note key={note._id} note={note}/>
+                  ))
+              : notes.map((note) => (
+                  <Note key={note._id} note={note} />                ))}
             <button
               className="w-full transition-colors hover:bg-grey px-4 py-2 flex items-center font-bold"
               onClick={() => createNote()}

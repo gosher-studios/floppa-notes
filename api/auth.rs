@@ -1,5 +1,5 @@
 use tide::{Request, Response, Error, Redirect, StatusCode};
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 use crate::{Result, State};
 
 #[derive(Deserialize)]
@@ -16,6 +16,9 @@ struct GithubLogin {
 pub struct GithubUser {
   pub id: i64,
 }
+
+#[derive(Serialize, Deserialize)]
+pub struct User {}
 
 pub async fn callback(req: Request<State>) -> Result<Response, Error> {
   let state = req.state();

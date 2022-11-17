@@ -48,10 +48,10 @@ const Editor = () => {
       <title>{note.title}</title>
       <div className="flex justify-center items-center relative py-2">
         <h1
-          className="absolute left-2 text-2xl font-bold cursor-pointer"
+          className="absolute left-2 text-2xl font-bold cursor-pointer hover:text-purple transition-colors"
           onClick={() => navigate("/")}
         >
-          NeoNotes
+          Floppa Notes
         </h1>
         <p
           contentEditable="true"
