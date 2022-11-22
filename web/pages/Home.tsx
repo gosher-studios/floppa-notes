@@ -10,17 +10,17 @@ const Home = () => {
   const [notes, setNotes] = useState([]);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  useEffect(() => {
-    if (!user.loading) {
-      if (user.token) {
-        fetch("http://localhost:4040/notes", {
-          headers: { Authorization: "Bearer " + user.token },
-        })
-          .then((res) => res.json())
-          .then((notes) => setNotes(notes));
-      }
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user.loading) {
+  //     if (user.token) {
+  //       fetch("http://localhost:4040/notes", {
+  //         headers: { Authorization: "Bearer " + user.token },
+  //       })
+  //         .then((res) => res.json())
+  //         .then((notes) => setNotes(notes));
+  //     }
+  //   }
+  // }, [user]);
 
   const createNote = () => {
     fetch("http://localhost:4040/notes", {
