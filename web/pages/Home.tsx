@@ -95,11 +95,8 @@ const Home = () => {
             {search
               ? notes
                   .filter((note) => note.title.includes(search))
-                  .map((note) => (
-                      <Note key={note._id} note={note}/>
-                  ))
-              : notes.map((note) => (
-                  <Note key={note._id} note={note} />                ))}
+                  .map((note) => <Note key={note._id} note={note} />)
+              : notes.map((note) => <Note key={note._id} note={note} />)}
             <button
               className="w-full transition-colors hover:bg-grey px-4 py-2 flex items-center font-bold"
               onClick={() => createNote()}

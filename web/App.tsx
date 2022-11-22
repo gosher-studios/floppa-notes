@@ -46,7 +46,10 @@ const App = () => {
   return (
     <BrowserRouter>
       <UserContext.Provider value={user}>
-        <div className="w-screen min-h-screen flex justify-center bg-darkgrey text-white text-lg font-switzer">
+        <div className="w-screen min-h-screen flex justify-center bg-darkgrey  text-white text-lg font-switzer">
+          <div className="w-16 h-16 fixed left-2 bottom-2 bg-purple z-50">
+            fuck you
+          </div>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/callback" element={<LoginCallback />} />

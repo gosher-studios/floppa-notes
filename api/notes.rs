@@ -5,7 +5,7 @@ use serde::{Serialize, Deserialize};
 use nanoid::nanoid;
 use async_std::stream::StreamExt;
 use crate::{Result, State, auth};
-
+use log::info;
 #[derive(Serialize, Deserialize)]
 pub struct Note {
   _id: String,
@@ -57,7 +57,7 @@ pub async fn create(req: Request<State>) -> Result<Response, Error> {
     .users
     .update_one(
       bson::doc! {"owner":uid},
-      bson::doc! {"$push": {"notes":id.clone()}},
+      bson::doc! {"$push": {"notes":{"name": "New Note".to_string(), "id": id.clone()}}},
       Some(UpdateOptions::builder().upsert(true).build()),
     )
     .await?;
@@ -65,17 +65,12 @@ pub async fn create(req: Request<State>) -> Result<Response, Error> {
 }
 
 pub async fn get_all(req: Request<State>) -> Result<Response, Error> {
-  // use user.notes instead
-  let notes: Vec<_> = req
-    .state()
-    .notes
-    .find(bson::doc! {"owner": auth::get_user(&req).await?.id}, None)
+  let notes = &req.state().users;
+  let index = notes
+    .find_one(bson::doc! {"owner": auth::get_user(&req).await?.id}, None)
     .await?
-    .map(|x| x.unwrap())
-    .collect()
-    .await;
-
-  Ok(Body::from_json(&notes)?.into())
+    .unwrap();
+  Ok(Body::from_json(&index)?.into())
 }
 
 pub async fn get_id(req: Request<State>) -> Result<Response, Error> {
@@ -108,6 +103,7 @@ pub async fn update(mut req: Request<State>) -> Result<Response, Error> {
             None,
           )
           .await?;
+        //todo add changes to index in user mongodb
         StatusCode::Ok.into()
       } else {
         StatusCode::Unauthorized.into()
