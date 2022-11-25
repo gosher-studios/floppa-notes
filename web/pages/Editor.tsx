@@ -40,7 +40,7 @@ const Editor = () => {
       }).then(() => setStatus("saved"));
     }
   }, [note]);
-
+  
   return note.loading ? (
     <p>loading</p>
   ) : (
@@ -64,11 +64,14 @@ const Editor = () => {
         </p>
         <p className="text-lightgrey ml-2 text-sm">{status}</p>
       </div>
-      <textarea
+      {/* <textarea
         value={note.content}
-        onChange={(e) => setNote({ ...note, ...{ content: e.target.value } })}
+        onChange={(e) => {setNote({ ...note, ...{ content: e.target.value } })}
         className="resize-none outline-none bg-grey  p-4 text-base flex-1"
-      />
+      /> */}
+      <div>
+        
+      </div>
     </div>
   );
 };
