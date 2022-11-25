@@ -19,7 +19,6 @@ pub struct GithubUser {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
-  pub _id: String,
   pub owner: i64,
   pub notes: Vec<Note>,
 }
@@ -29,6 +28,7 @@ pub struct Note {
   pub id: String,
   pub name: String,
 }
+
 pub async fn callback(req: Request<State>) -> Result<Response, Error> {
   let state = req.state();
   let res: GithubLogin = state
