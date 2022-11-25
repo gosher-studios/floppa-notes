@@ -47,7 +47,7 @@ const App = () => {
     <BrowserRouter>
       <UserContext.Provider value={user}>
         <div className="w-screen min-h-screen flex justify-center bg-darkgrey  text-white text-lg font-switzer">
-          {!modal ? (
+          {modal ? (
             <></>
           ) : (
             <div
@@ -75,7 +75,7 @@ const App = () => {
                   </a>
                 </span>
                 <div className="text-xl bottom-2 absolute m-4">
-                  made with 🔥 & 😢 by <a className="text-blue underline" href="github.com/chxry">
+                  made with 🔥 & 😢 by <a className="text-blue underline" href="https://github.com/chxry">
                     Alexander Tahiri
                   </a>
                   {' '} & {' '} 
