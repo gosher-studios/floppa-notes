@@ -28,13 +28,33 @@ const Editor = () => {
       }
     }
   }, [user]);
-  
+
   const handleLines = (e) => {
-    console.log(e.target.innerText);
-    console.log(e.target.innerHTML);
-      return "fart";
-    
-  }
+    const editor = document.getElementById("editor");
+    const sel = window.getSelection();
+    const node = sel.focusNode;
+    const offset = sel.focusOffset;
+    console.log(getCursor(editor,node,offset,{pos:0, done:false}))
+  };
+
+  const getCursor = (parent, node, offset, stat) => {
+    if (stat.done) return stat;
+
+    let currentNode = null;
+    if (parent.childNodes.length == 0) {
+      stat.pos += parent.textContent.length;
+    } else {
+      for (let i = 0; i < parent.childNodes.length && !stat.done; i++) {
+        currentNode = parent.childNodes[i];
+        if (currentNode === node) {
+          stat.pos += offset;
+          stat.done = true;
+          return stat;
+        } else getCursor(currentNode, node, offset, stat);
+      }
+    }
+    return stat;
+  };
 
   useEffect(() => {
     //probably should time this
@@ -47,7 +67,7 @@ const Editor = () => {
       }).then(() => setStatus("saved"));
     }
   }, [note]);
-  
+
   return note.loading ? (
     <p>loading</p>
   ) : (
@@ -76,9 +96,14 @@ const Editor = () => {
         onChange={(e) => {setNote({ ...note, ...{ content: e.target.value } })}
         className="resize-none outline-none bg-grey  p-4 text-base flex-1"
       /> */}
-      <div className="resize-none outline-none bg-grey p-4 text-base flex-1  w-fill overflow-auto  " contenteditable="true" onInput={(e) => {e.target.innerHTML = handleLines(e)}}>
-      
-      </div>
+      <div
+        className="resize-none outline-none bg-grey p-4 text-base flex-1  w-fill overflow-auto  "
+        contenteditable="true"
+        id="editor"
+        onInput={(e) => {
+          handleLines(e);
+        }}
+      ></div>
     </div>
   );
 };
