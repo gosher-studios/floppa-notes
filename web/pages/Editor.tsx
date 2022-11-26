@@ -28,6 +28,13 @@ const Editor = () => {
       }
     }
   }, [user]);
+  
+  const handleLines = (e) => {
+    console.log(e.target.innerText);
+    console.log(e.target.innerHTML);
+      return "fart";
+    
+  }
 
   useEffect(() => {
     //probably should time this
@@ -44,7 +51,7 @@ const Editor = () => {
   return note.loading ? (
     <p>loading</p>
   ) : (
-    <div className="w-[1024px] flex flex-col">
+    <div className="w-[1024px] flex flex-col h-screen">
       <title>{note.title}</title>
       <div className="flex justify-center items-center relative py-2">
         <h1
@@ -69,8 +76,8 @@ const Editor = () => {
         onChange={(e) => {setNote({ ...note, ...{ content: e.target.value } })}
         className="resize-none outline-none bg-grey  p-4 text-base flex-1"
       /> */}
-      <div>
-        
+      <div className="resize-none outline-none bg-grey p-4 text-base flex-1  w-fill overflow-auto  " contenteditable="true" onInput={(e) => {e.target.innerHTML = handleLines(e)}}>
+      
       </div>
     </div>
   );

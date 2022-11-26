@@ -71,6 +71,7 @@ pub async fn get_all(req: Request<State>) -> Result<Response, Error> {
     .await?
     .unwrap();
   Ok(Body::from_json(&index)?.into())
+  //TODO WHY THE FUCK DOES THIS NOT WORK
 }
 
 pub async fn get_id(req: Request<State>) -> Result<Response, Error> {
