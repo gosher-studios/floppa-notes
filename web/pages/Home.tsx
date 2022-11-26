@@ -112,7 +112,20 @@ const Home = () => {
           <p className="text-lightgrey">Nothing shared yet.</p>
         </>
       ) : (
-        <p>not logged in</p>
+        <div className="p-4 bg-grey rounded-lg text-2xl">
+          <h1 className="text-5xl mb-2 font-bold">
+            <span className="text-lightgrey">#</span> Floppa Notes
+          </h1>
+          <p>
+            the{" "}
+            <b>
+              <span className="text-lightgrey">**</span>fucking
+              <span className="text-lightgrey">**</span>
+            </b>{" "}
+            note taking app.
+          </p>
+          <p>blazingly fast 🚀🚀 🔥🔥</p>
+        </div>
       )}
     </Layout>
   );

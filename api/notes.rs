@@ -65,9 +65,10 @@ pub async fn create(req: Request<State>) -> Result<Response, Error> {
 }
 
 pub async fn get_all(req: Request<State>) -> Result<Response, Error> {
-  let notes = &req.state().users;
-  let index = notes
-    .find_one(bson::doc! {"owner": auth::get_user(&req).await?.id}, None)
+  let id = auth::get_user(&req).await?.id;
+  let users = &req.state().users;
+  let index = users
+    .find_one(bson::doc! {"owner": id}, None)
     .await?
     .unwrap();
   Ok(Body::from_json(&index)?.into())
