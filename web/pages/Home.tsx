@@ -10,17 +10,17 @@ const Home = () => {
   const [notes, setNotes] = useState([]);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  useEffect(() => {
-    if (!user.loading) {
-      if (user.token) {
-        fetch("http://localhost:4040/notes", {
-          headers: { Authorization: "Bearer " + user.token },
-        })
-          .then((res) => res.json())
-          .then((notes) => setNotes(notes));
-      }
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user.loading) {
+  //     if (user.token) {
+  //       fetch("http://localhost:4040/notes", {
+  //         headers: { Authorization: "Bearer " + user.token },
+  //       })
+  //         .then((res) => res.json())
+  //         .then((notes) => setNotes(notes));
+  //     }
+  //   }
+  // }, [user]);
 
   const createNote = () => {
     fetch("http://localhost:4040/notes", {
@@ -119,12 +119,20 @@ const Home = () => {
           <p>
             the{" "}
             <b>
-              <span className="text-lightgrey">**</span>fucking
+              <span className="text-lightgrey">**</span>functional
               <span className="text-lightgrey">**</span>
             </b>{" "}
             note taking app.
           </p>
-          <p>blazingly fast 🚀🚀 🔥🔥</p>
+          <p>Written in Rust & React 🚀🚀</p>
+
+          <h2 className="text-3xl mb-2 font-bold">
+            <span className="text-lightgrey">##</span> Features
+          </h2>
+          <ul className="list-disc px-12">
+            <li>Inline Markdown With Embeddable Plugins</li>
+            <li>blazingly fast</li>
+          </ul>
         </div>
       )}
     </Layout>

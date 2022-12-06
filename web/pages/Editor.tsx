@@ -1,13 +1,23 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext,useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { UserContext } from "../context";
 
 const Editor = () => {
   const { id } = useParams();
+  const edit  = useRef<HTMLDivElement>(null);
+  
   const navigate = useNavigate();
   const user = useContext(UserContext);
   const [note, setNote] = useState({ loading: true });
   const [status, setStatus] = useState("opened");
+  
+  const handleChange = (e) => {
+    edit.current.innerHTML = parse(e.target.innerText);
+    // edit.current.innerHTML = parse(edit.current.innerText)
+    console.log(edit.current.innerHTML);
+  }
+  
+  
   useEffect(() => {
     if (!user.loading) {
       if (user.token) {
@@ -29,32 +39,72 @@ const Editor = () => {
     }
   }, [user]);
 
-  const handleLines = (e) => {
-    const editor = document.getElementById("editor");
-    const sel = window.getSelection();
-    const node = sel.focusNode;
-    const offset = sel.focusOffset;
-    console.log(getCursor(editor,node,offset,{pos:0, done:false}))
+  // const handleLines = (e) => {
+    
+  //   const sel = window.getSelection();
+  //   const node = sel.focusNode;
+  //   const offset = sel.focusOffset;
+  //   const pos = getCursor(editor.current, node, offset, { pos: 0, done: false });
+  //       editor.current.innerHTML = parse(editor.current.innerText);
+    
+  //   sel.removeAllRanges();
+  //   const range = setCursor(editor.current, document.createRange(), {
+  //     pos: pos.pos,
+  //     done: false,
+  //   });
+  //   range.collapse(true);
+  //   sel.addRange(range);
+  // };
+
+  // const getCursor = (parent, node, offset, stat) => {
+  //   if (stat.done) return stat;
+
+  //   let currentNode = null;
+  //   if (parent.childNodes.length == 0) {
+  //     stat.pos += parent.textContent.length;
+  //     console.log(parent);
+  //   } else {
+  //     for (let i = 0; i < parent.childNodes.length && !stat.done; i++) {
+  //       currentNode = parent.childNodes[i];
+  //       if (currentNode === node) {
+  //         stat.pos += offset;
+  //         stat.done = true;
+  //         return stat;
+  //       } else getCursor(currentNode, node, offset, stat);
+  //     }
+  //   }
+  //   return stat;
+  // };
+  
+  const parse = (text) => {
+    return (
+    text
+      .replace(/\*{2}(.*?)\*{2}/gm, "**<strong>$1</strong>**") // bold
+      .replace(/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/gm, "*<em>$1</em>*") // italic
+      // handle special characters
+      .replace(/\n/gm, "<br /> ")
+      .replace(/\t/gm, "&#9;")
+  );
   };
 
-  const getCursor = (parent, node, offset, stat) => {
-    if (stat.done) return stat;
+  // const setCursor = (parent, range, stat) => {
+  //   if (stat.done) return range;
 
-    let currentNode = null;
-    if (parent.childNodes.length == 0) {
-      stat.pos += parent.textContent.length;
-    } else {
-      for (let i = 0; i < parent.childNodes.length && !stat.done; i++) {
-        currentNode = parent.childNodes[i];
-        if (currentNode === node) {
-          stat.pos += offset;
-          stat.done = true;
-          return stat;
-        } else getCursor(currentNode, node, offset, stat);
-      }
-    }
-    return stat;
-  };
+  //   if (parent.childNodes.length == 0) {
+  //     if (parent.textContent.length >= stat.pos) {
+  //       range.setStart(parent, stat.pos);
+  //       stat.done = true;
+  //     } else {
+  //       stat.pos = stat.pos - parent.textContent.length;
+  //     }
+  //   } else {
+  //     for (let i = 0; i < parent.childNodes.length && !stat.done; i++) {
+  //       currentNode = parent.childNodes[i];
+  //       setCursor(currentNode, range, stat);
+  //     }
+  //   }
+  //   return range;
+  // };
 
   useEffect(() => {
     //probably should time this
@@ -97,12 +147,12 @@ const Editor = () => {
         className="resize-none outline-none bg-grey  p-4 text-base flex-1"
       /> */}
       <div
-        className="resize-none outline-none bg-grey p-4 text-base flex-1  w-fill overflow-auto  "
-        contenteditable="true"
-        id="editor"
-        onInput={(e) => {
-          handleLines(e);
-        }}
+        ref={edit}
+        className="resize-none outline-none bg-grey p-4 text-base flex-1  w-fill overflow-y-auto overflow-x-none whitespace-pre "
+        contentEditable="true"
+        onInput={(e) => handleChange(e)}
+        suppressContentEditableWarning={true}
+    
       ></div>
     </div>
   );
