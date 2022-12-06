@@ -7,7 +7,6 @@ use tide::http::headers::HeaderValue;
 use mongodb::{Client as MongoClient, Collection};
 use reqwest::Client;
 use log::info;
-use crate::auth::User;
 use crate::config::Config;
 use crate::notes::Note;
 
@@ -18,7 +17,6 @@ pub struct State {
   reqwest: Client,
   config: Config,
   notes: Collection<Note>,
-  users: Collection<User>,
 }
 
 impl State {
@@ -31,7 +29,6 @@ impl State {
       reqwest: Client::builder().user_agent("floppa notes").build()?,
       config,
       notes: db.collection("notes"),
-      users: db.collection("users"),
     })
   }
 }

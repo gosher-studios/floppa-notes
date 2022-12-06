@@ -52,27 +52,19 @@ pub async fn create(req: Request<State>) -> Result<Response, Error> {
       None,
     )
     .await?;
-  req
-    .state()
-    .users
-    .update_one(
-      bson::doc! {"owner":uid},
-      bson::doc! {"$push": {"notes":{"name": "New Note".to_string(), "id": id.clone()}}},
-      Some(UpdateOptions::builder().upsert(true).build()),
-    )
-    .await?;
   Ok(id.into())
 }
 
 pub async fn get_all(req: Request<State>) -> Result<Response, Error> {
-  let id = auth::get_user(&req).await?.id;
-  let users = &req.state().users;
-  let index = users
-    .find_one(bson::doc! {"owner": id}, None)
+  let notes: Vec<_> = req
+    .state()
+    .notes
+    .find(bson::doc! {"owner": auth::get_user(&req).await?.id}, None)
     .await?
-    .unwrap();
-  info!("{:?}", index);
-  Ok(Body::from_json(&index)?.into())
+    .map(|x| x.unwrap())
+    .collect()
+    .await;
+  Ok(Body::from_json(&notes)?.into())
 }
 
 pub async fn get_id(req: Request<State>) -> Result<Response, Error> {
